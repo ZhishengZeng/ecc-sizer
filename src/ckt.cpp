@@ -1956,7 +1956,7 @@ void Circuit::runGR(int gr_overflow_iterations, bool fast, int slack_max_iter) {
         grt->setMaxRoutingLayer(signal_high_layer);
         grt->setMinLayerForClock(clk_low_layer);
         grt->setMaxLayerForClock(clk_high_layer);
-        grt->setAdjustment(0.5);
+        grt->setAdjustment(0.0);
         grt->setResistanceAware(false);
         grt->setVerbose(true);
         grt->setCongestionIterations(gr_overflow_iterations);

@@ -1589,7 +1589,7 @@ void Sizer::refreshOpenStaParasitics(bool verbose_global_route) {
     grt->setMaxRoutingLayer(signal_high_layer);
     grt->setMinLayerForClock(signal_low_layer);
     grt->setMaxLayerForClock(signal_high_layer);
-    grt->setAdjustment(0.5);
+    grt->setAdjustment(0.0);
     grt->setResistanceAware(false);
     grt->setVerbose(verbose_global_route);
     const int gr_iterations = gr_rc_congestion_iterations;
