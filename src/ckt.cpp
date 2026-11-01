@@ -71,6 +71,45 @@ bool isPadDataPin(odb::dbITerm* iterm)
            iterm->getMTerm()->getName() == "PAD";
 }
 
+bool isExternalPadOnlyNet(odb::dbNet* db_net)
+{
+    if(db_net == nullptr || db_net->getBTerms().empty() ||
+       db_net->getITerms().empty()) {
+        return false;
+    }
+
+    for(auto* iterm : db_net->getITerms()) {
+        if(iterm == nullptr || iterm->getMTerm() == nullptr ||
+           iterm->getMTerm()->getMaster() == nullptr) {
+            return false;
+        }
+        const odb::dbMasterType type
+            = iterm->getMTerm()->getMaster()->getType();
+        if(!(type.isPad() || type.isCover()) ||
+           iterm->getMTerm()->getName() != "PAD") {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int markExternalPadOnlyNetsDontTouch(odb::dbBlock* block)
+{
+    if(block == nullptr) {
+        return 0;
+    }
+
+    int marked = 0;
+    for(auto* db_net : block->getNets()) {
+        if(isExternalPadOnlyNet(db_net) && !db_net->isDoNotTouch()) {
+            db_net->setDoNotTouch(true);
+            ++marked;
+        }
+    }
+    return marked;
+}
+
 bool isBoundaryBuffer(odb::dbInst* inst)
 {
     if(inst == nullptr || inst->getMaster() == nullptr) {
@@ -2072,6 +2111,13 @@ void Circuit::init_opensta() {
     // _ord_design->link(_sizer->);
     _ord_design->readDef(_sizer->defFile, true);
     assertNoIllegalExternalPadBoundaryChain();
+    const int marked_external_pad_nets
+        = markExternalPadOnlyNetsDontTouch(_ord_design->getBlock());
+    if(marked_external_pad_nets > 0) {
+        cout << "Marked " << marked_external_pad_nets
+             << " external PAD-only nets as dont-touch before timing repair."
+             << endl;
+    }
     auto block = _ord_design->getBlock();
     old_localtion_x.clear();
     old_localtion_y.clear();
