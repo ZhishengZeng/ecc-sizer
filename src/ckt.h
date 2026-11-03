@@ -895,8 +895,6 @@ class Circuit {
     void readSpefChangePinName(string& pin_name);
     sta::dbSta* _sta = nullptr;
     Tcl_Interp* sta_interp = nullptr;
-    std::vector< int > old_localtion_x;
-    std::vector< int > old_localtion_y;
     std::vector< string > old_master_map;
 
    private:

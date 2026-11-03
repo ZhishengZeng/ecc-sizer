@@ -1860,19 +1860,11 @@ ostream& operator<<(ostream& os, SOL& sol) {
 
 void Circuit::runGR(int gr_overflow_iterations, bool fast, int slack_max_iter) {
     auto corner = _ord_timing->getCorners()[0];
-    auto block = _ord_design->getBlock();
-    if(old_localtion_x.empty()) {
-        for(auto db_inst : block->getInsts()) {
-            int inst_x, inst_y;
-            db_inst->getLocation(inst_x, inst_y);
-            old_localtion_x.push_back(inst_x);
-            old_localtion_y.push_back(inst_y);
-        }
-    }
     bool use_gr_correlation = false;
     int cor_step = 0;
     int numcells = g_cells.size();
 #if 0
+    auto block = _ord_design->getBlock();
     if(use_gr_correlation) {
         for(auto db_inst : block->getInsts()) {
             string old_type = db_inst->getMaster()->getName();
@@ -2117,17 +2109,6 @@ void Circuit::init_opensta() {
         cout << "Marked " << marked_external_pad_nets
              << " external PAD-only nets as dont-touch before timing repair."
              << endl;
-    }
-    auto block = _ord_design->getBlock();
-    old_localtion_x.clear();
-    old_localtion_y.clear();
-    old_localtion_x.reserve(block->getInsts().size());
-    old_localtion_y.reserve(block->getInsts().size());
-    for(auto db_inst : block->getInsts()) {
-        int inst_x, inst_y;
-        db_inst->getLocation(inst_x, inst_y);
-        old_localtion_x.push_back(inst_x);
-        old_localtion_y.push_back(inst_y);
     }
     // std::string spefFile = design_dir + design_name + ".spef";
     if(_sizer->spefFile != "") {

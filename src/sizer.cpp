@@ -6126,25 +6126,6 @@ void Sizer::Parallel_Sizer_Launcher() {
                     auto block = _ord_design->getBlock();
                     auto _sta = ord::OpenRoad::openRoad()->getSta();
                     _sta->networkChanged();
-                    int inst_iter = 0;
-                    for(auto db_inst : block->getInsts()) {
-                        int inst_x, inst_y;
-                        int old_x, old_y;
-                        db_inst->getLocation(old_x, old_y);
-                        if((old_x != _ckt->old_localtion_x[inst_iter] ||
-                            old_y != _ckt->old_localtion_y[inst_iter]) &&
-                           !db_inst->getPlacementStatus().isFixed()) {
-                            db_inst->setLocation(
-                                _ckt->old_localtion_x[inst_iter],
-                                _ckt->old_localtion_y[inst_iter]);
-                            cout << "Move " << db_inst->getName() << " from ("
-                                 << old_x << ", " << old_y << ") to ("
-                                 << _ckt->old_localtion_x[inst_iter] << ", "
-                                 << _ckt->old_localtion_y[inst_iter] << ")"
-                                 << endl;
-                        }
-                        inst_iter++;
-                    }
                     for(unsigned i = 0; i < numcells; i++) {
                         LibCellInfo *lib_cell_info =
                             getLibCellInfo(best_cells_poweropt[i]);
@@ -6359,20 +6340,6 @@ void Sizer::FinalReport() {
 
         if(spefFile != "") {
             return;
-        }
-
-        int inst_iter = 0;
-        for(auto db_inst : block->getInsts()) {
-            int inst_x, inst_y;
-            int old_x, old_y;
-            db_inst->getLocation(old_x, old_y);
-            if((old_x != _ckt->old_localtion_x[inst_iter] ||
-                old_y != _ckt->old_localtion_y[inst_iter]) &&
-               !db_inst->getPlacementStatus().isFixed()) {
-                db_inst->setLocation(_ckt->old_localtion_x[inst_iter],
-                                     _ckt->old_localtion_y[inst_iter]);
-            }
-            inst_iter++;
         }
 
         char padding_str[100];
