@@ -1003,7 +1003,7 @@ bool Sizer::cell_retype(CELL &cell, int dir, bool pt_corr, bool update_cap) {
         return false;
 
     cell_vtypes vtype = cell.c_vtype;
-    printf("retype %s\n", cell.name.c_str());
+    // printf("retype %s\n", cell.name.c_str());
     if(dir == 0)
         return (cell.c_vtype == (numVt - 1));
 
